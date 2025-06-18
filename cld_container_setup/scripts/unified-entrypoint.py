@@ -21,26 +21,18 @@ def _retry_if_error(exception):
 
 @retry(stop_max_delay=50000, retry_on_exception=_retry_if_error)
 def start_model_server():
-    """Start the Multi Model Server for inference."""
+    """Start the Model Server for inference (single model only).""" # Updated docstring
     from sagemaker_inference import model_server
     
-    # Configure model server settings
-    if os.environ.get('SAGEMAKER_MULTI_MODEL', 'false').lower() == 'true':
-        # Multi-model endpoint configuration
-        logger.info("Starting Multi-Model Server...")
-        os.environ.setdefault('SAGEMAKER_MODEL_SERVER_WORKERS', '1')
-        handler_service = os.environ.get(
-            'SAGEMAKER_INFERENCE_HANDLER',
-            '/home/model-server/inference_handler.py:handle'
-        )
-    else:
-        # Single model endpoint configuration
-        logger.info("Starting Single Model Server...")
-        handler_service = os.environ.get(
-            'SAGEMAKER_INFERENCE_HANDLER',
-            '/home/model-server/inference_handler.py:handle'
-        )
-    
+    # Single model endpoint configuration
+    logger.info("Starting Single Model Server...")
+    handler_service = os.environ.get(
+        'SAGEMAKER_INFERENCE_HANDLER',
+        '/home/model-server/inference_handler.py:handle' # Ensure this path is correct
+    )
+    # Explicitly set model server workers if needed, or rely on sagemaker-inference default
+    # os.environ.setdefault('SAGEMAKER_MODEL_SERVER_WORKERS', '1') # This line can be kept or removed based on typical single-model needs
+
     model_server.start_model_server(handler_service=handler_service)
 
 def start_training():
