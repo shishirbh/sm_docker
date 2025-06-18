@@ -62,3 +62,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     LC_ALL=C.UTF-8
 
 ENV SAGEMAKER_TRAINING_MODULE custom_framework_training.training:main
+
+# Set working directory and default entrypoint for training jobs
+WORKDIR /opt/ml
+ENTRYPOINT ["python", "-m", "custom_framework_training.training"]
+CMD ["train"]

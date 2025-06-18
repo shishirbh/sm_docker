@@ -75,6 +75,8 @@ def main():
         if command == "train":
             start_training()
         elif command == "serve":
+            for var in ("SM_TRAINING_ENV", "SM_USER_ARGS"):
+                os.environ.pop(var, None)
             start_model_server()
         else:
             # Execute custom command

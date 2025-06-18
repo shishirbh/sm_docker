@@ -9,7 +9,8 @@ from sagemaker_inference import model_server
 
 
 def _retry_if_error(exception):
-    return isinstance(exception, CalledProcessError or OSError)
+    """Retry on process errors including OSError."""
+    return isinstance(exception, (CalledProcessError, OSError))
 
 
 @retry(stop_max_delay=1000 * 50, retry_on_exception=_retry_if_error)
