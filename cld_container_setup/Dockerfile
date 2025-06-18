@@ -8,10 +8,18 @@ RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
     gcc \
     g++ \
-    python3-dev \
     make \
+    python3-dev \
     build-essential \
+    ca-certificates \
+    curl \
     rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && \
+    apt-get install -y default-jdk && \
+    rm -rf /var/lib/apt/lists/*
+
+
 # Set environment variables to prevent buffering of logs
 ENV PYTHONUNBUFFERED=1
 
