@@ -1,0 +1,42 @@
+unified-sagemaker-container/
+│
+├── Dockerfile                           # Unified container definition
+├── setup.py                            # Package setup file
+├── build_and_push.sh                   # Build and push script (make executable)
+├── README.md                           # Documentation
+│
+├── src/                                # Framework source code
+│   └── unified_sagemaker_framework/
+│       ├── __init__.py
+│       ├── training.py                 # Training module
+│       └── serving.py                  # Serving module
+│
+├── scripts/                            # Container scripts
+│   └── unified-entrypoint.py          # Container entrypoint
+│
+├── handlers/                           # Default and example handlers
+│   ├── inference_handler.py           # Default inference handler
+│   └── training_handler.py            # Custom training handler example
+│
+├── examples/                          # Example usage
+│   ├── train.py                      # Example training script
+│   ├── custom_model.py               # Example custom model
+│   ├── notebook.ipynb                # Example notebook
+│   └── requirements.txt              # Example requirements
+│
+├── docker/                           # Docker build context
+│   └── code/                        # Directory for built packages
+│       └── .gitkeep
+│
+└── tests/                           # Unit tests
+    ├── __init__.py
+    ├── test_training.py
+    ├── test_inference.py
+    └── test_container.py
+
+# After building, the package will be placed in:
+# docker/code/unified_sagemaker_framework-1.0.0.tar.gz
+
+# Usage:
+# 1. chmod +x build_and_push.sh
+# 2. ./build_and_push.sh <account-id> <region> <repository-name>
