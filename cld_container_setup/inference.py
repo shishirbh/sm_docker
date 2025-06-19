@@ -3,55 +3,36 @@ import logging
 import os
 
 import numpy as np
+import joblib
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+
 def model_fn(model_dir):
-    """Load the model for inference"""
-    try:
-        # Load your model here
-        # Example:
-        # model = joblib.load(os.path.join(model_dir, "model.joblib"))
-        logger.info("Model loaded successfully")
-        return model
-    except Exception as e:
-        logger.error(f"Error loading model: {e}")
-        raise
+    """Load the model for inference."""
+    model_path = os.path.join(model_dir, "model.joblib")
+    logger.info("Loading model from %s", model_path)
+    model = joblib.load(model_path)
+    return model
+
 
 def input_fn(request_body, request_content_type):
-    """Parse input data payload"""
-    try:
-        if request_content_type == "application/json":
-            data = json.loads(request_body)
-            # Convert to appropriate format for prediction
-            # Example:
-            # data = np.array(data)
-            return data
-        else:
-            raise ValueError(f"Unsupported content type: {request_content_type}")
-    except Exception as e:
-        logger.error(f"Error parsing input data: {e}")
-        raise
+    """Parse input data payload."""
+    if request_content_type == "application/json":
+        data = json.loads(request_body)
+        return np.array(data)
+    raise ValueError(f"Unsupported content type: {request_content_type}")
+
 
 def predict_fn(input_data, model):
-    """Perform prediction"""
-    try:
-        # Make prediction using the model
-        # Example:
-        # prediction = model.predict(input_data)
-        return prediction
-    except Exception as e:
-        logger.error(f"Error during prediction: {e}")
-        raise
+    """Perform prediction."""
+    prediction = model.predict(input_data)
+    return prediction
+
 
 def output_fn(prediction, accept):
-    """Format the prediction output"""
-    try:
-        if accept == "application/json":
-            response = json.dumps(prediction.tolist())
-            return response
-        raise ValueError(f"Unsupported accept type: {accept}")
-    except Exception as e:
-        logger.error(f"Error formatting output: {e}")
-        raise
+    """Format the prediction output."""
+    if accept == "application/json":
+        return json.dumps(prediction.tolist())
+    raise ValueError(f"Unsupported accept type: {accept}")
