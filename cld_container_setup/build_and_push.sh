@@ -20,26 +20,19 @@ echo "Repository: $REPO_NAME"
 
 # Get the directory of this script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
 # Build the framework package
 echo "Building framework package..."
-cd "$PROJECT_ROOT"
-if [ -d "package" ]; then
-    cd package
-    python setup.py sdist
-    cp dist/unified_sagemaker_framework-1.0.0.tar.gz ../docker/code/
-    cd ..
-else
-    # If using the src structure directly
-    python setup.py sdist
-    mkdir -p docker/code
-    cp dist/unified_sagemaker_framework-1.0.0.tar.gz docker/code/
-fi
+cd "$SCRIPT_DIR" # Change to script directory
+
+python setup.py sdist --dist-dir dist # Output tarball to $SCRIPT_DIR/dist/
+mkdir -p code
+cp dist/unified_sagemaker_framework-1.0.0.tar.gz code/
 
 # Build Docker image
 echo "Building Docker image..."
-docker build -f Dockerfile -t ${REPO_NAME} .
+# Ensure Docker build is run from SCRIPT_DIR where Dockerfile is located
+docker build -f Dockerfile -t ${REPO_NAME} . # Context is $SCRIPT_DIR
 
 # Tag for ECR
 FULL_NAME="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REPO_NAME}:latest"
@@ -68,7 +61,10 @@ docker push ${VERSIONED_NAME}
 
 echo "Also pushed with version tag: ${VERSIONED_NAME}"
 
-# Clean up
-rm -f docker/code/unified_sagemaker_framework-1.0.0.tar.gz
+# Clean up local artifacts
+echo "Cleaning up local artifacts..."
+rm -rf code
+rm -rf dist
+rm -rf unified_sagemaker_framework.egg-info # Common name for build artifacts from setuptools
 
 echo "Build and push completed successfully!"

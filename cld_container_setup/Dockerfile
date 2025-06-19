@@ -36,8 +36,8 @@ RUN apt-get update && apt-get upgrade -y && \
     liblzma-dev && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Python 3.9
-ARG PYTHON_VERSION=3.9.16
+# Install Python 3.11
+ARG PYTHON_VERSION=3.11.6
 RUN wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz && \
     tar -xzf Python-$PYTHON_VERSION.tgz && \
     cd Python-$PYTHON_VERSION && \
@@ -46,8 +46,8 @@ RUN wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSIO
     make altinstall && \
     cd .. && \
     rm -rf Python-$PYTHON_VERSION* && \
-    ln -s /usr/local/bin/python3.9 /usr/bin/python && \
-    ln -s /usr/local/bin/pip3.9 /usr/bin/pip
+    ln -s /usr/local/bin/python3.11 /usr/bin/python && \
+    ln -s /usr/local/bin/pip3.11 /usr/bin/pip
 
 # Upgrade pip and install base Python packages
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
@@ -72,7 +72,8 @@ RUN pip install --no-cache-dir \
     mxnet==1.9.1 \
     torch==2.0.1 \
     torchvision==0.15.2 \
-    tensorflow==2.13.0
+    tensorflow==2.13.0 \
+    joblib==1.3.2
 
 # Create necessary directories
 RUN mkdir -p /opt/ml/code /opt/ml/model /home/model-server

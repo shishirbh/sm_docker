@@ -25,23 +25,10 @@ def start_model_server():
     from sagemaker_inference import model_server
     
     # Configure model server settings
-    if os.environ.get('SAGEMAKER_MULTI_MODEL', 'false').lower() == 'true':
-        # Multi-model endpoint configuration
-        logger.info("Starting Multi-Model Server...")
-        os.environ.setdefault('SAGEMAKER_MODEL_SERVER_WORKERS', '1')
-        handler_service = os.environ.get(
-            'SAGEMAKER_INFERENCE_HANDLER',
-            '/home/model-server/inference_handler.py:handle'
-        )
-    else:
-        # Single model endpoint configuration
-        logger.info("Starting Single Model Server...")
-        handler_service = os.environ.get(
-            'SAGEMAKER_INFERENCE_HANDLER',
-            '/home/model-server/inference_handler.py:handle'
-        )
-    
-    model_server.start_model_server(handler_service=handler_service)
+    # The SageMaker Inference Toolkit will automatically load the user script
+    # specified by the SAGEMAKER_PROGRAM environment variable.
+    logger.info("Starting Model Server...")
+    model_server.start_model_server()
 
 def start_training():
     """Start the training process."""

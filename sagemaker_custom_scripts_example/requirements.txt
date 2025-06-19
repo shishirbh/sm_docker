@@ -1,0 +1,4 @@
+# Add any specific Python dependencies required by your train.py or inference.py scripts.
+# These will be installed by SageMaker in the container before your script runs.
+# Example:
+# some-package==1.2.3
