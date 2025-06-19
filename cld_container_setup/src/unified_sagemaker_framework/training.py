@@ -27,8 +27,8 @@ class UnifiedTrainingFramework:
         os.makedirs(self.training_env.model_dir, exist_ok=True)
         
         # Add code directory to Python path
-        if self.training_env.code_dir not in sys.path:
-            sys.path.insert(0, self.training_env.code_dir)
+        if self.training_env.module_dir not in sys.path:
+            sys.path.insert(0, self.training_env.module_dir)
             
     def load_custom_handler(self):
         """Load custom training handler if specified."""
